@@ -1,0 +1,796 @@
+/* =========================================================
+   RETAILIQ — ADMIN / STORE MANAGEMENT
+   ========================================================= */
+
+
+/* =========================================================
+   STORES PAGE
+   ========================================================= */
+
+.stores-page {
+    width: 100%;
+    max-width: 1240px;
+
+    margin: 0 auto;
+
+    padding: 58px 0 60px;
+}
+
+
+/* =========================================================
+   PAGE HEADER
+   ========================================================= */
+
+.stores-page-header {
+    width: 100%;
+
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+
+    gap: 30px;
+
+    margin-bottom: 28px;
+    padding-bottom: 25px;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.stores-header-copy {
+    min-width: 0;
+}
+
+.stores-eyebrow {
+    display: block;
+
+    margin-bottom: 10px;
+
+    color: var(--accent);
+
+    font-size: 9px;
+    font-weight: 700;
+
+    letter-spacing: 0.17em;
+
+    text-transform: uppercase;
+}
+
+.stores-header-copy h2 {
+    margin: 0;
+
+    color: var(--text);
+
+    font-size: 38px;
+    font-weight: 650;
+
+    line-height: 1.05;
+
+    letter-spacing: -0.045em;
+}
+
+.stores-header-copy p {
+    max-width: 650px;
+
+    margin: 10px 0 0;
+
+    color: var(--text-soft);
+
+    font-size: 12px;
+
+    line-height: 1.6;
+}
+
+.stores-count {
+    flex-shrink: 0;
+
+    min-width: 105px;
+
+    padding: 13px 16px;
+
+    border: 1px solid var(--border);
+    border-radius: 9px;
+
+    background: rgba(255, 255, 255, 0.018);
+
+    text-align: center;
+}
+
+.stores-count strong {
+    display: block;
+
+    color: var(--text);
+
+    font-size: 20px;
+    font-weight: 650;
+
+    line-height: 1;
+}
+
+.stores-count span {
+    display: block;
+
+    margin-top: 5px;
+
+    color: var(--text-muted);
+
+    font-size: 8px;
+
+    letter-spacing: 0.08em;
+
+    text-transform: uppercase;
+}
+
+
+/* =========================================================
+   FILTER CARD
+   ========================================================= */
+
+.stores-filter-card {
+    width: 100%;
+
+    margin-bottom: 22px;
+    padding: 22px;
+
+    border: 1px solid var(--border);
+    border-radius: 12px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(16, 23, 29, 0.96),
+            rgba(10, 15, 19, 0.96)
+        );
+
+    box-shadow:
+        0 18px 50px rgba(0, 0, 0, 0.10),
+        inset 0 1px 0 rgba(255, 255, 255, 0.02);
+}
+
+.stores-filter-header {
+    margin-bottom: 19px;
+    padding-bottom: 15px;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.stores-filter-header span {
+    display: block;
+
+    color: var(--text-muted);
+
+    font-size: 8px;
+    font-weight: 700;
+
+    letter-spacing: 0.15em;
+
+    text-transform: uppercase;
+}
+
+.stores-filter-header h3 {
+    margin: 5px 0 0;
+
+    color: var(--text);
+
+    font-size: 16px;
+    font-weight: 650;
+
+    letter-spacing: -0.02em;
+}
+
+
+/* =========================================================
+   STORE FILTER COMPONENT
+   ========================================================= */
+
+.stores-filter-card .store-filters {
+    width: 100%;
+}
+
+
+/* =========================================================
+   SEARCH FIELDS
+   ========================================================= */
+
+.stores-filter-card .store-filter-grid {
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 14px;
+}
+
+.stores-filter-card .store-filter-field {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 7px;
+}
+
+.stores-filter-card .store-filter-field label {
+    color: var(--text-soft);
+
+    font-size: 9px;
+    font-weight: 600;
+}
+
+.stores-filter-card input,
+.stores-filter-card select {
+    box-sizing: border-box;
+
+    width: 100%;
+    height: 42px;
+
+    padding: 0 12px;
+
+    border: 1px solid var(--border);
+    border-radius: 8px;
+
+    outline: none;
+
+    background: #090e13;
+
+    color: var(--text);
+
+    font-family: inherit;
+    font-size: 10px;
+
+    transition:
+        border-color 150ms ease,
+        background 150ms ease,
+        box-shadow 150ms ease;
+}
+
+.stores-filter-card input::placeholder {
+    color: #52606c;
+}
+
+.stores-filter-card input:hover,
+.stores-filter-card select:hover {
+    border-color: var(--border-light);
+}
+
+.stores-filter-card input:focus,
+.stores-filter-card select:focus {
+    border-color: rgba(85, 214, 178, 0.4);
+
+    background: #0b1116;
+
+    box-shadow:
+        0 0 0 3px rgba(85, 214, 178, 0.055);
+}
+
+
+/* =========================================================
+   COMPACT SORT + ACTION ROW
+   ========================================================= */
+
+.stores-filter-card .store-filter-bottom {
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(150px, 190px)
+        minmax(150px, 190px)
+        auto;
+
+    align-items: end;
+
+    justify-content: space-between;
+
+    gap: 14px;
+
+    margin-top: 18px;
+
+    padding-top: 18px;
+
+    border-top: 1px solid var(--border);
+}
+
+
+/* =========================================================
+   SORT CONTROLS
+   ========================================================= */
+
+.stores-filter-card .store-sort-field {
+    min-width: 0;
+}
+
+.stores-filter-card .store-sort-field select {
+    height: 40px;
+}
+
+
+/* =========================================================
+   ACTIONS
+   ========================================================= */
+
+.stores-filter-card .store-filter-actions {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: flex-end;
+
+    gap: 8px;
+
+    height: 40px;
+}
+
+.stores-filter-card .store-filter-actions button {
+    height: 40px;
+
+    min-width: 82px;
+
+    padding: 0 15px;
+
+    border-radius: 7px;
+
+    font-family: inherit;
+
+    font-size: 9px;
+    font-weight: 650;
+
+    cursor: pointer;
+
+    transition:
+        transform 150ms ease,
+        background 150ms ease,
+        border-color 150ms ease,
+        color 150ms ease;
+}
+
+.stores-filter-card .store-filter-search {
+    border: 1px solid var(--accent-border);
+
+    background: var(--accent-soft);
+
+    color: var(--accent-light);
+}
+
+.stores-filter-card .store-filter-search:hover {
+    border-color: rgba(85, 214, 178, 0.34);
+
+    background: rgba(85, 214, 178, 0.13);
+
+    transform: translateY(-1px);
+}
+
+.stores-filter-card .store-filter-clear {
+    border: 1px solid var(--border);
+
+    background: rgba(255, 255, 255, 0.025);
+
+    color: var(--text-soft);
+}
+
+.stores-filter-card .store-filter-clear:hover {
+    border-color: var(--border-light);
+
+    background: rgba(255, 255, 255, 0.05);
+
+    color: var(--text);
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   DIRECTORY CARD
+   ========================================================= */
+
+.store-directory-card {
+    width: 100%;
+
+    border: 1px solid var(--border);
+    border-radius: 12px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(14, 20, 26, 0.97),
+            rgba(9, 14, 18, 0.97)
+        );
+
+    box-shadow:
+        0 18px 55px rgba(0, 0, 0, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.02);
+
+    overflow: hidden;
+}
+
+.store-directory-header {
+    min-height: 72px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    padding: 16px 22px;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.store-directory-header span {
+    color: var(--text-muted);
+
+    font-size: 8px;
+    font-weight: 700;
+
+    letter-spacing: 0.15em;
+
+    text-transform: uppercase;
+}
+
+.store-directory-header h3 {
+    margin: 5px 0 0;
+
+    color: var(--text);
+
+    font-size: 17px;
+    font-weight: 650;
+
+    letter-spacing: -0.025em;
+}
+
+.store-record-count {
+    flex-shrink: 0;
+
+    padding: 7px 10px;
+
+    border: 1px solid var(--border);
+    border-radius: 6px;
+
+    color: var(--text-soft);
+
+    font-size: 9px;
+}
+
+
+/* =========================================================
+   TABLE WRAPPER
+   ========================================================= */
+
+.stores-table-container {
+    width: 100%;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-light) transparent;
+}
+
+
+/* =========================================================
+   STORE TABLE
+   ========================================================= */
+
+.professional-stores-table {
+    width: 100%;
+
+    min-width: 720px;
+
+    border-collapse: collapse;
+
+    table-layout: fixed;
+}
+
+.professional-stores-table th {
+    height: 44px;
+
+    padding: 0 17px;
+
+    background: rgba(255, 255, 255, 0.025);
+
+    border-bottom: 1px solid var(--border);
+
+    color: #687783;
+
+    font-size: 8px;
+    font-weight: 700;
+
+    letter-spacing: 0.13em;
+
+    text-align: left;
+
+    text-transform: uppercase;
+}
+
+.professional-stores-table th:nth-child(1) {
+    width: 20%;
+}
+
+.professional-stores-table th:nth-child(2) {
+    width: 24%;
+}
+
+.professional-stores-table th:nth-child(3) {
+    width: 39%;
+}
+
+.professional-stores-table th:nth-child(4) {
+    width: 17%;
+}
+
+.professional-stores-table td {
+    min-width: 0;
+
+    padding: 15px 17px;
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.055);
+
+    color: #aab5bf;
+
+    font-size: 10px;
+
+    line-height: 1.45;
+
+    vertical-align: middle;
+
+    overflow-wrap: anywhere;
+}
+
+.professional-stores-table tbody tr {
+    transition: background 140ms ease;
+}
+
+.professional-stores-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.022);
+}
+
+.professional-stores-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+
+/* =========================================================
+   STORE TEXT
+   ========================================================= */
+
+.table-store-name {
+    color: var(--text) !important;
+
+    font-weight: 550;
+}
+
+.table-store-email {
+    color: #9eabb7 !important;
+}
+
+.table-store-address {
+    color: #8e9ba7 !important;
+}
+
+
+/* =========================================================
+   RATING
+   ========================================================= */
+
+.store-rating-badge {
+    min-width: 48px;
+    height: 27px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0 9px;
+
+    border: 1px solid rgba(85, 214, 178, 0.18);
+    border-radius: 999px;
+
+    background: rgba(85, 214, 178, 0.06);
+
+    color: var(--accent-light);
+
+    font-size: 9px;
+    font-weight: 650;
+}
+
+
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+
+.stores-empty-state {
+    height: 150px;
+
+    color: var(--text-muted) !important;
+
+    text-align: center;
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 1050px) {
+
+    .stores-page {
+        padding-top: 48px;
+    }
+
+    .stores-filter-card .store-filter-grid {
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr));
+    }
+
+    .stores-filter-card .store-filter-bottom {
+        grid-template-columns:
+            minmax(140px, 180px)
+            minmax(140px, 180px)
+            auto;
+    }
+
+    .professional-stores-table {
+        min-width: 700px;
+    }
+}
+
+
+/* =========================================================
+   SMALL TABLET
+   ========================================================= */
+
+@media (max-width: 850px) {
+
+    .stores-page {
+        padding-top: 40px;
+    }
+
+    .stores-page-header {
+        align-items: flex-start;
+
+        gap: 20px;
+    }
+
+    .stores-header-copy h2 {
+        font-size: 32px;
+    }
+
+    .stores-filter-card {
+        padding: 18px;
+    }
+
+    .stores-filter-card .store-filter-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .stores-filter-card .store-filter-bottom {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .stores-filter-card .store-filter-actions {
+        grid-column: 1 / -1;
+
+        justify-content: flex-end;
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 680px) {
+
+    .stores-page {
+        padding: 30px 0 45px;
+    }
+
+    .stores-page-header {
+        display: block;
+
+        margin-bottom: 20px;
+    }
+
+    .stores-header-copy h2 {
+        font-size: 31px;
+    }
+
+    .stores-header-copy p {
+        font-size: 11px;
+    }
+
+    .stores-count {
+        width: fit-content;
+
+        min-width: 0;
+
+        margin-top: 18px;
+    }
+
+    .stores-filter-card {
+        padding: 16px;
+    }
+
+    .stores-filter-card .store-filter-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .stores-filter-card .store-filter-bottom {
+        grid-template-columns: 1fr;
+    }
+
+    .stores-filter-card .store-filter-actions {
+        grid-column: auto;
+
+        display: grid;
+
+        grid-template-columns:
+            1fr
+            1fr;
+
+        height: auto;
+    }
+
+    .stores-filter-card .store-filter-actions button {
+        width: 100%;
+    }
+
+    .store-directory-header {
+        padding: 15px;
+
+        align-items: flex-start;
+    }
+
+    .professional-stores-table {
+        min-width: 680px;
+    }
+}
+
+
+/* =========================================================
+   VERY SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 420px) {
+
+    .stores-header-copy h2 {
+        font-size: 28px;
+    }
+
+    .stores-filter-card {
+        padding: 13px;
+    }
+
+    .stores-filter-card .store-filter-actions {
+        grid-template-columns: 1fr;
+    }
+
+    .store-directory-header {
+        flex-direction: column;
+    }
+
+    .store-record-count {
+        width: fit-content;
+    }
+
+    .professional-stores-table {
+        min-width: 650px;
+    }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .professional-stores-table tbody tr,
+    .stores-filter-card .store-filter-actions button {
+        transition: none;
+    }
+}
