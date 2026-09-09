@@ -27,7 +27,7 @@ function UserList() {
 
         try {
             const response = await axios.get(
-                "http://localhost:5000/api/admin/users",
+                "https://retailiq-thru.onrender.com/api/admin/users",
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -80,7 +80,7 @@ function UserList() {
 
         try {
             const response = await axios.get(
-                `http://localhost:5000/api/admin/users/${userId}`,
+                `https://retailiq-thru.onrender.com/api/admin/users/${userId}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,

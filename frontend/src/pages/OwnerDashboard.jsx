@@ -27,7 +27,7 @@ function OwnerDashboard() {
             const token = localStorage.getItem("token");
 
             const response = await axios.get(
-                "http://localhost:5000/api/owner/dashboard",
+                "https://retailiq-thru.onrender.com/api/owner/dashboard",
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -59,7 +59,7 @@ function OwnerDashboard() {
             const token = localStorage.getItem("token");
 
             const response = await axios.put(
-                "http://localhost:5000/api/owner/change-password",
+                "https://retailiq-thru.onrender.com/api/owner/change-password",
                 {
                     currentPassword,
                     newPassword,

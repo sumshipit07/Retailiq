@@ -11,7 +11,7 @@ function StoreList() {
             const token = localStorage.getItem("token");
 
             const response = await axios.get(
-                "http://localhost:5000/api/admin/stores",
+                "https://retailiq-thru.onrender.com/api/admin/stores",
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,

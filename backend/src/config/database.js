@@ -1,4 +1,5 @@
 const { Sequelize } = require("sequelize");
+
 require("dotenv").config();
 
 const sequelize = new Sequelize(
@@ -10,6 +11,15 @@ const sequelize = new Sequelize(
     port: process.env.DB_PORT,
     dialect: "postgres",
     logging: false,
+
+    ...(process.env.DB_SSL === "true" && {
+      dialectOptions: {
+        ssl: {
+          require: true,
+          rejectUnauthorized: false,
+        },
+      },
+    }),
   }
 );
 

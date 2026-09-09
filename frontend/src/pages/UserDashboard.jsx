@@ -32,7 +32,7 @@ function UserDashboard() {
             const token = localStorage.getItem("token");
 
             const response = await axios.get(
-                "http://localhost:5000/api/user/stores",
+                "https://retailiq-thru.onrender.com/api/user/stores",
                 {
                     params: {
                         name,
@@ -76,7 +76,7 @@ function UserDashboard() {
             const token = localStorage.getItem("token");
 
             await axios.post(
-                "http://localhost:5000/api/ratings",
+                "https://retailiq-thru.onrender.com/api/ratings",
                 {
                     storeId,
                     rating: Number(rating),
@@ -111,7 +111,7 @@ function UserDashboard() {
             const token = localStorage.getItem("token");
 
             const response = await axios.put(
-                "http://localhost:5000/api/user/change-password",
+                "https://retailiq-thru.onrender.com/api/user/change-password",
                 {
                     currentPassword,
                     newPassword,

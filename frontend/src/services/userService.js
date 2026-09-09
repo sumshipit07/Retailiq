@@ -4,7 +4,7 @@ const getStores = async () => {
     const token = localStorage.getItem("token");
 
     const response = await axios.get(
-        "http://localhost:5000/api/user/stores",
+        "https://retailiq-thru.onrender.com/api/user/stores",
         {
             headers: {
                 Authorization: `Bearer ${token}`,

@@ -24,7 +24,7 @@ function AdminDashboard() {
 
         axios
             .get(
-                "http://localhost:5000/api/admin/dashboard",
+                "https://retailiq-thru.onrender.com/api/admin/dashboard",
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -289,9 +289,37 @@ function AdminDashboard() {
 
                     </div>
 
-                    <span className="admin-topbar-role">
-                        SYSTEM ADMIN
-                    </span>
+                    <div
+                        style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "16px",
+                        }}
+                    >
+
+                        <span className="admin-topbar-role">
+                            SYSTEM ADMIN
+                        </span>
+
+                        <button
+                            type="button"
+                            onClick={handleLogout}
+                            style={{
+                                padding: "10px 18px",
+                                borderRadius: "999px",
+                                border: "1px solid rgba(190, 112, 255, 0.5)",
+                                background: "transparent",
+                                color: "inherit",
+                                fontSize: "11px",
+                                fontWeight: "600",
+                                letterSpacing: "0.08em",
+                                cursor: "pointer",
+                            }}
+                        >
+                            LOGOUT ↗
+                        </button>
+
+                    </div>
 
                 </header>
 

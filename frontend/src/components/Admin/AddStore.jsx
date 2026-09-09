@@ -20,7 +20,7 @@ function AddStore() {
                 const token = localStorage.getItem("token");
 
                 const response = await axios.get(
-                    "http://localhost:5000/api/admin/users?role=STORE_OWNER",
+                    "https://retailiq-thru.onrender.com/api/admin/users?role=STORE_OWNER",
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,
@@ -56,7 +56,7 @@ function AddStore() {
             const token = localStorage.getItem("token");
 
             const response = await axios.post(
-                "http://localhost:5000/api/admin/stores",
+                "https://retailiq-thru.onrender.com/api/admin/stores",
                 {
                     name: formData.name,
                     email: formData.email,
