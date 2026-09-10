@@ -1,10 +1,171 @@
-import { useEffect, useState } from "react";
-import "./UserList.css";
+import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
+import "./UserListMobile.css";
+
+const API_URL =
+    "https://retailiq-thru.onrender.com/api/admin";
+
+
+/* =========================================================
+   ICON
+========================================================= */
+
+function Icon({ name, size = 18 }) {
+    const common = {
+        width: size,
+        height: size,
+        viewBox: "0 0 24 24",
+        fill: "none",
+        stroke: "currentColor",
+        strokeWidth: 1.8,
+        strokeLinecap: "round",
+        strokeLinejoin: "round",
+        "aria-hidden": true,
+    };
+
+    switch (name) {
+        case "filter":
+            return (
+                <svg {...common}>
+                    <path d="M4 6h16" />
+                    <path d="M7 12h10" />
+                    <path d="M10 18h4" />
+                </svg>
+            );
+
+        case "search":
+            return (
+                <svg {...common}>
+                    <circle cx="11" cy="11" r="6.5" />
+                    <path d="m16 16 4 4" />
+                </svg>
+            );
+
+        case "user":
+            return (
+                <svg {...common}>
+                    <circle cx="12" cy="8" r="3.5" />
+                    <path d="M5 20a7 7 0 0 1 14 0" />
+                </svg>
+            );
+
+        case "users":
+            return (
+                <svg {...common}>
+                    <circle cx="9" cy="8" r="3" />
+                    <path d="M3 20a6 6 0 0 1 12 0" />
+                    <path d="M16 5.5a3 3 0 0 1 0 5.5" />
+                    <path d="M18 15a5 5 0 0 1 3 4.5" />
+                </svg>
+            );
+
+        case "chevron":
+            return (
+                <svg {...common}>
+                    <path d="m9 6 6 6-6 6" />
+                </svg>
+            );
+
+        case "x":
+            return (
+                <svg {...common}>
+                    <path d="M6 6l12 12" />
+                    <path d="M18 6 6 18" />
+                </svg>
+            );
+
+        case "close":
+            return (
+                <svg {...common}>
+                    <path d="M6 6l12 12" />
+                    <path d="M18 6 6 18" />
+                </svg>
+            );
+
+        case "sort":
+            return (
+                <svg {...common}>
+                    <path d="M8 6h12" />
+                    <path d="M8 12h9" />
+                    <path d="M8 18h6" />
+                    <path d="m4 7 2-2 2 2" />
+                    <path d="M6 5v14" />
+                </svg>
+            );
+
+        case "refresh":
+            return (
+                <svg {...common}>
+                    <path d="M20 11a8 8 0 0 0-14.7-4L4 9" />
+                    <path d="M4 4v5h5" />
+                    <path d="M4 13a8 8 0 0 0 14.7 4L20 15" />
+                    <path d="M20 20v-5h-5" />
+                </svg>
+            );
+
+        default:
+            return null;
+    }
+}
+
+
+/* =========================================================
+   ROLE HELPERS
+========================================================= */
+
+function formatRole(role) {
+    if (role === "SYSTEM_ADMIN") {
+        return "Admin";
+    }
+
+    if (role === "STORE_OWNER") {
+        return "Store Owner";
+    }
+
+    return "User";
+}
+
+
+function getInitials(name = "") {
+    const parts = name
+        .trim()
+        .split(/\s+/)
+        .filter(Boolean);
+
+    if (parts.length === 0) {
+        return "?";
+    }
+
+    if (parts.length === 1) {
+        return parts[0].charAt(0).toUpperCase();
+    }
+
+    return (
+        parts[0].charAt(0) +
+        parts[parts.length - 1].charAt(0)
+    ).toUpperCase();
+}
+
+
+/* =========================================================
+   COMPONENT
+========================================================= */
 
 function UserList() {
+
     const [users, setUsers] = useState([]);
-    const [selectedUser, setSelectedUser] = useState(null);
+
+    const [selectedUser, setSelectedUser] =
+        useState(null);
+
+    const [loading, setLoading] =
+        useState(true);
+
+    const [filterOpen, setFilterOpen] =
+        useState(false);
+
+    const [advancedOpen, setAdvancedOpen] =
+        useState(false);
 
     const [filters, setFilters] = useState({
         name: "",
@@ -13,44 +174,90 @@ function UserList() {
         role: "",
     });
 
-    const [sortBy, setSortBy] = useState("createdAt");
-    const [order, setOrder] = useState("DESC");
+    const [sortBy, setSortBy] =
+        useState("createdAt");
 
-    const fetchUsers = async () => {
-        const token = localStorage.getItem("token");
+    const [order, setOrder] =
+        useState("DESC");
+
+
+    /* =====================================================
+       FETCH USERS
+    ===================================================== */
+
+    const fetchUsers = async (
+        customFilters = filters,
+        customSortBy = sortBy,
+        customOrder = order
+    ) => {
+
+        const token =
+            localStorage.getItem("token");
 
         const params = {
-            ...filters,
-            sortBy,
-            order,
+            ...customFilters,
+            sortBy: customSortBy,
+            order: customOrder,
         };
 
+        setLoading(true);
+
         try {
+
             const response = await axios.get(
-                "https://retailiq-thru.onrender.com/api/admin/users",
+                `${API_URL}/users`,
                 {
                     headers: {
-                        Authorization: `Bearer ${token}`,
+                        Authorization:
+                            `Bearer ${token}`,
                     },
+
                     params,
                 }
             );
 
-            setUsers(response.data.data);
+            setUsers(
+                response.data?.data || []
+            );
+
         } catch (error) {
+
             console.error(
                 "Failed to load users:",
-                error.response?.data || error.message
+                error.response?.data ||
+                    error.message
             );
+
+            setUsers([]);
+
+        } finally {
+
+            setLoading(false);
         }
     };
 
+
+    /* =====================================================
+       INITIAL LOAD
+    ===================================================== */
+
     useEffect(() => {
         fetchUsers();
-    }, [sortBy, order]);
+    }, []);
 
-    const handleFilterChange = (event) => {
-        const { name, value } = event.target;
+
+    /* =====================================================
+       FILTER CHANGE
+    ===================================================== */
+
+    const handleFilterChange = (
+        event
+    ) => {
+
+        const {
+            name,
+            value,
+        } = event.target;
 
         setFilters((previous) => ({
             ...previous,
@@ -58,432 +265,892 @@ function UserList() {
         }));
     };
 
-    const handleSearch = () => {
-        fetchUsers();
+
+    /* =====================================================
+       SEARCH
+    ===================================================== */
+
+    const handleSearch = async () => {
+
+        await fetchUsers(
+            filters,
+            sortBy,
+            order
+        );
+
+        setFilterOpen(false);
     };
 
-    const handleClear = () => {
-        const defaultFilters = {
+
+    /* =====================================================
+       CLEAR
+    ===================================================== */
+
+    const handleClear = async () => {
+
+        const emptyFilters = {
             name: "",
             email: "",
             address: "",
             role: "",
         };
 
-        setFilters(defaultFilters);
+        setFilters(emptyFilters);
+
         setSortBy("createdAt");
         setOrder("DESC");
+
+        await fetchUsers(
+            emptyFilters,
+            "createdAt",
+            "DESC"
+        );
     };
 
-    const handleViewDetails = async (userId) => {
-        const token = localStorage.getItem("token");
+
+    /* =====================================================
+       REMOVE ONE FILTER
+    ===================================================== */
+
+    const removeFilter = async (
+        filterName
+    ) => {
+
+        const updatedFilters = {
+            ...filters,
+            [filterName]: "",
+        };
+
+        setFilters(updatedFilters);
+
+        await fetchUsers(
+            updatedFilters,
+            sortBy,
+            order
+        );
+    };
+
+
+    /* =====================================================
+       SORT
+    ===================================================== */
+
+    const handleSortChange = (
+        event
+    ) => {
+
+        setSortBy(event.target.value);
+    };
+
+
+    const handleOrderChange = (
+        event
+    ) => {
+
+        setOrder(event.target.value);
+    };
+
+
+    useEffect(() => {
+
+        if (!loading) {
+            fetchUsers(
+                filters,
+                sortBy,
+                order
+            );
+        }
+
+    }, [sortBy, order]);
+
+
+    /* =====================================================
+       VIEW USER DETAILS
+    ===================================================== */
+
+    const handleViewDetails = async (
+        userId
+    ) => {
+
+        const token =
+            localStorage.getItem("token");
 
         try {
-            const response = await axios.get(
-                `https://retailiq-thru.onrender.com/api/admin/users/${userId}`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
+
+            const response =
+                await axios.get(
+                    `${API_URL}/users/${userId}`,
+                    {
+                        headers: {
+                            Authorization:
+                                `Bearer ${token}`,
+                        },
+                    }
+                );
+
+            setSelectedUser(
+                response.data?.data
             );
 
-            setSelectedUser(response.data.data);
         } catch (error) {
+
             console.error(
                 "Failed to load user details:",
-                error.response?.data || error.message
+                error.response?.data ||
+                    error.message
             );
         }
     };
 
-    const formatRole = (role) => {
+
+    /* =====================================================
+       ACTIVE FILTER CHIPS
+    ===================================================== */
+
+    const activeFilters =
+        useMemo(() => {
+
+            const labels = {
+                name: "Name",
+                email: "Email",
+                address: "Address",
+                role: "Role",
+            };
+
+            return Object.entries(filters)
+                .filter(
+                    ([, value]) =>
+                        value.trim() !== ""
+                )
+                .map(
+                    ([key, value]) => ({
+                        key,
+                        label:
+                            labels[key],
+                        value:
+                            key === "role"
+                                ? formatRole(value)
+                                : value,
+                    })
+                );
+
+        }, [filters]);
+
+
+    /* =====================================================
+       ROLE AVATAR CLASS
+    ===================================================== */
+
+    const getRoleClass = (role) => {
+
         if (role === "SYSTEM_ADMIN") {
-            return "System Admin";
+            return "admin";
         }
 
         if (role === "STORE_OWNER") {
-            return "Store Owner";
+            return "owner";
         }
 
-        return "Normal User";
+        return "user";
     };
 
+
     return (
-        <section className="users-page">
+        <section className="users-management">
 
-            {/* PAGE HEADER */}
+            {/* =================================================
+                MOBILE USERS HEADER
+            ================================================= */}
 
-            <div className="users-page-header">
+            <div className="users-mobile-header">
 
-                <div className="users-header-copy">
-                    <span className="section-eyebrow">
-                        ACCOUNT MANAGEMENT
-                    </span>
+                <div className="users-mobile-title-row">
 
-                    <h2>Users</h2>
+                    <div>
 
-                    <p>
-                        Manage registered accounts, roles and
-                        user access across the RetailIQ platform.
-                    </p>
-                </div>
+                        <span className="users-mobile-eyebrow">
+                            MANAGEMENT
+                        </span>
 
-                <div className="users-count">
-                    <strong>{users.length}</strong>
-                    <span>visible users</span>
+                        <h2>
+                            Users
+                            <span className="users-count-pill">
+                                {users.length}
+                            </span>
+                        </h2>
+
+                        <p>
+                            Manage registered accounts
+                            and roles
+                        </p>
+
+                    </div>
+
                 </div>
 
             </div>
 
 
-            {/* FILTER PANEL */}
+            {/* =================================================
+                MOBILE SEARCH
+            ================================================= */}
 
-            <div className="users-filter-card">
+            <div className="users-mobile-search">
 
-                <div className="filter-card-header">
-                    <div>
-                        <span>SEARCH & FILTER</span>
-                        <h3>Find users</h3>
-                    </div>
-                </div>
+                <div className="users-mobile-search-box">
 
-                <div className="user-filter-grid">
+                    <Icon
+                        name="search"
+                        size={18}
+                    />
 
-                    <div className="user-field">
-                        <label htmlFor="user-name">
-                            Name
-                        </label>
+                    <input
+                        type="text"
+                        name="name"
+                        value={filters.name}
+                        onChange={
+                            handleFilterChange
+                        }
+                        onKeyDown={(event) => {
+                            if (
+                                event.key ===
+                                "Enter"
+                            ) {
+                                handleSearch();
+                            }
+                        }}
+                        placeholder="Search users by name"
+                        aria-label="Search users by name"
+                    />
 
-                        <input
-                            id="user-name"
-                            type="text"
-                            name="name"
-                            placeholder="Search by name"
-                            value={filters.name}
-                            onChange={handleFilterChange}
+                    <button
+                        type="button"
+                        onClick={
+                            handleSearch
+                        }
+                        aria-label="Search"
+                    >
+                        <Icon
+                            name="search"
+                            size={17}
                         />
-                    </div>
-
-
-                    <div className="user-field">
-                        <label htmlFor="user-email">
-                            Email
-                        </label>
-
-                        <input
-                            id="user-email"
-                            type="text"
-                            name="email"
-                            placeholder="Search by email"
-                            value={filters.email}
-                            onChange={handleFilterChange}
-                        />
-                    </div>
-
-
-                    <div className="user-field">
-                        <label htmlFor="user-address">
-                            Address
-                        </label>
-
-                        <input
-                            id="user-address"
-                            type="text"
-                            name="address"
-                            placeholder="Search by address"
-                            value={filters.address}
-                            onChange={handleFilterChange}
-                        />
-                    </div>
-
-
-                    <div className="user-field">
-                        <label htmlFor="user-role">
-                            Role
-                        </label>
-
-                        <select
-                            id="user-role"
-                            name="role"
-                            value={filters.role}
-                            onChange={handleFilterChange}
-                        >
-                            <option value="">
-                                All Roles
-                            </option>
-
-                            <option value="SYSTEM_ADMIN">
-                                System Admin
-                            </option>
-
-                            <option value="NORMAL_USER">
-                                Normal User
-                            </option>
-
-                            <option value="STORE_OWNER">
-                                Store Owner
-                            </option>
-                        </select>
-                    </div>
+                    </button>
 
                 </div>
 
 
-                <div className="user-filter-footer">
+                <button
+                    type="button"
+                    className={`users-filter-toggle ${
+                        filterOpen
+                            ? "active"
+                            : ""
+                    }`}
+                    onClick={() =>
+                        setFilterOpen(
+                            (previous) =>
+                                !previous
+                        )
+                    }
+                >
 
-                    <div className="user-sort-group">
+                    <Icon
+                        name="filter"
+                        size={18}
+                    />
 
-                        <div className="user-field">
-                            <label htmlFor="user-sort">
-                                Sort by
-                            </label>
+                    <span>
+                        Filter & Sort
+                    </span>
 
-                            <select
-                                id="user-sort"
-                                value={sortBy}
-                                onChange={(event) =>
-                                    setSortBy(event.target.value)
+                    {activeFilters.length >
+                        0 && (
+                        <b>
+                            {activeFilters.length}
+                        </b>
+                    )}
+
+                </button>
+
+            </div>
+
+
+            {/* =================================================
+                ACTIVE FILTER CHIPS
+            ================================================= */}
+
+            {activeFilters.length > 0 && (
+
+                <div className="users-filter-chips">
+
+                    {activeFilters.map(
+                        (filter) => (
+
+                            <button
+                                type="button"
+                                key={filter.key}
+                                className="users-filter-chip"
+                                onClick={() =>
+                                    removeFilter(
+                                        filter.key
+                                    )
                                 }
                             >
-                                <option value="name">
-                                    Name
-                                </option>
 
-                                <option value="email">
-                                    Email
-                                </option>
+                                <span>
+                                    {filter.label}:
+                                    {" "}
+                                    {filter.value}
+                                </span>
 
-                                <option value="role">
-                                    Role
-                                </option>
+                                <Icon
+                                    name="x"
+                                    size={12}
+                                />
 
-                                <option value="createdAt">
-                                    Created Date
-                                </option>
-                            </select>
+                            </button>
+                        )
+                    )}
+
+                </div>
+            )}
+
+
+            {/* =================================================
+                FILTER PANEL
+            ================================================= */}
+
+            {filterOpen && (
+
+                <div className="users-mobile-filter-panel">
+
+                    <div className="users-filter-panel-header">
+
+                        <div>
+
+                            <span>
+                                FILTER & SORT
+                            </span>
+
+                            <h3>
+                                Find users
+                            </h3>
+
                         </div>
-
-
-                        <div className="user-field">
-                            <label htmlFor="user-order">
-                                Order
-                            </label>
-
-                            <select
-                                id="user-order"
-                                value={order}
-                                onChange={(event) =>
-                                    setOrder(event.target.value)
-                                }
-                            >
-                                <option value="ASC">
-                                    Ascending
-                                </option>
-
-                                <option value="DESC">
-                                    Descending
-                                </option>
-                            </select>
-                        </div>
-
-                    </div>
-
-
-                    <div className="user-filter-actions">
 
                         <button
                             type="button"
-                            className="user-btn user-btn-primary"
-                            onClick={handleSearch}
+                            onClick={() =>
+                                setFilterOpen(
+                                    false
+                                )
+                            }
+                            aria-label="Close filters"
                         >
+                            <Icon
+                                name="close"
+                                size={18}
+                            />
+                        </button>
+
+                    </div>
+
+
+                    <div className="users-filter-fields">
+
+                        <div className="users-filter-field">
+
+                            <label htmlFor="mobile-user-email">
+                                Email
+                            </label>
+
+                            <input
+                                id="mobile-user-email"
+                                type="text"
+                                name="email"
+                                placeholder="Search by email"
+                                value={filters.email}
+                                onChange={
+                                    handleFilterChange
+                                }
+                            />
+
+                        </div>
+
+
+                        <div className="users-filter-field">
+
+                            <label htmlFor="mobile-user-role">
+                                Role
+                            </label>
+
+                            <select
+                                id="mobile-user-role"
+                                name="role"
+                                value={filters.role}
+                                onChange={
+                                    handleFilterChange
+                                }
+                            >
+
+                                <option value="">
+                                    All roles
+                                </option>
+
+                                <option value="NORMAL_USER">
+                                    User
+                                </option>
+
+                                <option value="STORE_OWNER">
+                                    Store Owner
+                                </option>
+
+                                <option value="SYSTEM_ADMIN">
+                                    Admin
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <button
+                            type="button"
+                            className="users-advanced-toggle"
+                            onClick={() =>
+                                setAdvancedOpen(
+                                    (previous) =>
+                                        !previous
+                                )
+                            }
+                        >
+
+                            <span>
+                                Advanced filters
+                            </span>
+
+                            <span>
+                                {advancedOpen
+                                    ? "−"
+                                    : "+"}
+                            </span>
+
+                        </button>
+
+
+                        {advancedOpen && (
+
+                            <div className="users-advanced-fields">
+
+                                <div className="users-filter-field">
+
+                                    <label htmlFor="mobile-user-address">
+                                        Address
+                                    </label>
+
+                                    <input
+                                        id="mobile-user-address"
+                                        type="text"
+                                        name="address"
+                                        placeholder="Search by address"
+                                        value={
+                                            filters.address
+                                        }
+                                        onChange={
+                                            handleFilterChange
+                                        }
+                                    />
+
+                                </div>
+
+                            </div>
+                        )}
+
+
+                        <div className="users-filter-sort">
+
+                            <div className="users-filter-field">
+
+                                <label htmlFor="mobile-sort-by">
+                                    Sort by
+                                </label>
+
+                                <select
+                                    id="mobile-sort-by"
+                                    value={sortBy}
+                                    onChange={
+                                        handleSortChange
+                                    }
+                                >
+
+                                    <option value="createdAt">
+                                        Created Date
+                                    </option>
+
+                                    <option value="name">
+                                        Name
+                                    </option>
+
+                                    <option value="email">
+                                        Email
+                                    </option>
+
+                                    <option value="address">
+                                        Address
+                                    </option>
+
+                                    <option value="role">
+                                        Role
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+                            <div className="users-filter-field">
+
+                                <label htmlFor="mobile-order">
+                                    Order
+                                </label>
+
+                                <select
+                                    id="mobile-order"
+                                    value={order}
+                                    onChange={
+                                        handleOrderChange
+                                    }
+                                >
+
+                                    <option value="DESC">
+                                        Descending
+                                    </option>
+
+                                    <option value="ASC">
+                                        Ascending
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div className="users-filter-actions-mobile">
+
+                        <button
+                            type="button"
+                            className="users-search-primary"
+                            onClick={
+                                handleSearch
+                            }
+                        >
+                            <Icon
+                                name="search"
+                                size={17}
+                            />
+
                             Search
                         </button>
 
                         <button
                             type="button"
-                            className="user-btn user-btn-secondary"
-                            onClick={handleClear}
+                            className="users-clear-secondary"
+                            onClick={
+                                handleClear
+                            }
                         >
-                            Clear
+                            Clear filters
                         </button>
 
                     </div>
 
                 </div>
+            )}
+
+
+            {/* =================================================
+                DIRECTORY SUMMARY
+            ================================================= */}
+
+            <div className="users-directory-summary">
+
+                <div>
+
+                    <span>
+                        USER DIRECTORY
+                    </span>
+
+                    <strong>
+                        {loading
+                            ? "Loading users..."
+                            : `Showing ${users.length} ${
+                                  users.length === 1
+                                      ? "user"
+                                      : "users"
+                              }`}
+                    </strong>
+
+                </div>
+
+                <button
+                    type="button"
+                    onClick={() =>
+                        fetchUsers()
+                    }
+                    aria-label="Refresh users"
+                >
+                    <Icon
+                        name="refresh"
+                        size={17}
+                    />
+                </button>
 
             </div>
 
 
-            {/* USER DIRECTORY */}
+            {/* =================================================
+                LOADING SKELETONS
+            ================================================= */}
 
-            <div className="user-directory-card">
+            {loading && (
 
-                <div className="directory-header">
+                <div className="users-mobile-list">
 
-                    <div>
-                        <span>REGISTERED ACCOUNTS</span>
+                    {Array.from({
+                        length: 5,
+                    }).map((_, index) => (
 
-                        <h3>User directory</h3>
-                    </div>
+                        <div
+                            className="user-mobile-card user-mobile-skeleton"
+                            key={index}
+                        >
 
-                    <div className="directory-records">
-                        {users.length} records
-                    </div>
+                            <div className="skeleton-avatar" />
+
+                            <div className="skeleton-content">
+
+                                <div className="skeleton-line skeleton-name" />
+
+                                <div className="skeleton-line skeleton-email" />
+
+                                <div className="skeleton-pill" />
+
+                            </div>
+
+                            <div className="skeleton-arrow" />
+
+                        </div>
+
+                    ))}
 
                 </div>
+            )}
 
 
-                <div className="users-table-container">
+            {/* =================================================
+                EMPTY STATE
+            ================================================= */}
 
-                    <table className="professional-users-table">
+            {!loading &&
+                users.length === 0 && (
 
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Address</th>
-                                <th>Role</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
+                    <div className="users-empty-mobile">
 
-                        <tbody>
+                        <div className="users-empty-icon">
 
-                            {users.length === 0 ? (
+                            <Icon
+                                name="users"
+                                size={30}
+                            />
 
-                                <tr>
-                                    <td
-                                        colSpan="5"
-                                        className="users-empty-state"
+                        </div>
+
+                        <h3>
+                            No users found
+                        </h3>
+
+                        <p>
+                            Try adjusting your
+                            filters
+                        </p>
+
+                        <button
+                            type="button"
+                            onClick={
+                                handleClear
+                            }
+                        >
+                            Clear Filters
+                        </button>
+
+                    </div>
+                )}
+
+
+            {/* =================================================
+                MOBILE USER CARDS
+            ================================================= */}
+
+            {!loading &&
+                users.length > 0 && (
+
+                    <div className="users-mobile-list">
+
+                        {users.map((user) => (
+
+                            <button
+                                type="button"
+                                className="user-mobile-card"
+                                key={user.id}
+                                onClick={() =>
+                                    handleViewDetails(
+                                        user.id
+                                    )
+                                }
+                            >
+
+                                <div
+                                    className={`user-mobile-avatar role-${getRoleClass(
+                                        user.role
+                                    )}`}
+                                >
+                                    {getInitials(
+                                        user.name
+                                    )}
+                                </div>
+
+
+                                <div className="user-mobile-card-content">
+
+                                    <strong>
+                                        {user.name}
+                                    </strong>
+
+                                    <span className="user-mobile-email">
+                                        {user.email}
+                                    </span>
+
+                                    <span
+                                        className={`user-mobile-role role-${getRoleClass(
+                                            user.role
+                                        )}`}
                                     >
-                                        No users found.
-                                    </td>
-                                </tr>
+                                        {formatRole(
+                                            user.role
+                                        )}
+                                    </span>
 
-                            ) : (
-
-                                users.map((user) => (
-
-                                    <tr key={user.id}>
-
-                                        <td
-                                            data-label="Name"
-                                            className="table-user-name"
-                                        >
-                                            {user.name}
-                                        </td>
-
-                                        <td
-                                            data-label="Email"
-                                            className="table-user-email"
-                                        >
-                                            {user.email}
-                                        </td>
-
-                                        <td
-                                            data-label="Address"
-                                            className="table-user-address"
-                                        >
-                                            {user.address || "-"}
-                                        </td>
-
-                                        <td data-label="Role">
-                                            <span
-                                                className={`user-role-badge role-${user.role.toLowerCase()}`}
-                                            >
-                                                {formatRole(user.role)}
-                                            </span>
-                                        </td>
-
-                                        <td
-                                            data-label="Action"
-                                            className="table-user-action"
-                                        >
-                                            <button
-                                                type="button"
-                                                className="view-user-button"
-                                                onClick={() =>
-                                                    handleViewDetails(user.id)
-                                                }
-                                            >
-                                                View details
-                                                <span>→</span>
-                                            </button>
-                                        </td>
-
-                                    </tr>
-
-                                ))
-
-                            )}
-
-                        </tbody>
-
-                    </table>
-
-                </div>
-
-            </div>
+                                </div>
 
 
-            {/* USER DETAILS */}
+                                <span className="user-mobile-chevron">
+
+                                    <Icon
+                                        name="chevron"
+                                        size={19}
+                                    />
+
+                                </span>
+
+                            </button>
+                        ))}
+
+                    </div>
+                )}
+
+
+            {/* =================================================
+                USER DETAILS MODAL
+            ================================================= */}
 
             {selectedUser && (
 
                 <div
                     className="user-modal-backdrop"
-                    onClick={() => setSelectedUser(null)}
+                    onClick={(event) => {
+
+                        if (
+                            event.target ===
+                            event.currentTarget
+                        ) {
+                            setSelectedUser(
+                                null
+                            );
+                        }
+
+                    }}
                 >
 
                     <div
                         className="user-details-modal"
-                        onClick={(event) =>
-                            event.stopPropagation()
-                        }
+                        role="dialog"
+                        aria-modal="true"
+                        aria-labelledby="user-details-title"
                     >
 
                         <div className="modal-top">
 
                             <div>
+
                                 <span>
-                                    ACCOUNT DETAILS
+                                    USER PROFILE
                                 </span>
 
-                                <h3>User details</h3>
+                                <h3 id="user-details-title">
+                                    User details
+                                </h3>
+
                             </div>
+
 
                             <button
                                 type="button"
-                                className="modal-x"
+                                className="modal-close"
                                 onClick={() =>
-                                    setSelectedUser(null)
+                                    setSelectedUser(
+                                        null
+                                    )
                                 }
+                                aria-label="Close user details"
                             >
-                                ×
+                                <Icon
+                                    name="close"
+                                    size={18}
+                                />
                             </button>
 
                         </div>
 
 
-                        <div className="user-profile-row">
+                        <div className="details-profile">
 
-                            <div className="user-profile-avatar">
-                                {selectedUser.name
-                                    ?.charAt(0)
-                                    .toUpperCase()}
+                            <div
+                                className={`details-avatar role-${getRoleClass(
+                                    selectedUser.role
+                                )}`}
+                            >
+                                {getInitials(
+                                    selectedUser.name
+                                )}
                             </div>
 
-                            <div className="user-profile-info">
+
+                            <div>
 
                                 <h4>
                                     {selectedUser.name}
                                 </h4>
 
                                 <span
-                                    className={`user-role-badge role-${selectedUser.role.toLowerCase()}`}
+                                    className={`role-badge role-${selectedUser.role.toLowerCase()}`}
                                 >
-                                    {formatRole(selectedUser.role)}
+                                    {formatRole(
+                                        selectedUser.role
+                                    )}
                                 </span>
 
                             </div>
@@ -491,63 +1158,84 @@ function UserList() {
                         </div>
 
 
-                        <div className="user-detail-grid">
+                        <div className="details-grid">
 
-                            <div className="user-detail-item">
-                                <span>Email</span>
+                            <div className="detail-item">
+
+                                <span>
+                                    EMAIL
+                                </span>
+
                                 <strong>
                                     {selectedUser.email}
                                 </strong>
+
                             </div>
 
-                            <div className="user-detail-item">
-                                <span>Address</span>
+
+                            <div className="detail-item">
+
+                                <span>
+                                    ADDRESS
+                                </span>
+
                                 <strong>
-                                    {selectedUser.address || "-"}
+                                    {selectedUser.address ||
+                                        "-"}
                                 </strong>
+
                             </div>
 
                         </div>
 
 
-                        {selectedUser.role === "STORE_OWNER" &&
+                        {selectedUser.role ===
+                            "STORE_OWNER" &&
                             selectedUser.store && (
 
-                                <div className="owner-store-panel">
+                                <div className="owner-store-card">
 
-                                    <div className="owner-store-top">
+                                    <div className="owner-store-header">
 
-                                        <div>
-                                            <span>
-                                                STORE INFORMATION
-                                            </span>
+                                        <span>
+                                            STORE INFORMATION
+                                        </span>
 
-                                            <h4>
-                                                {
-                                                    selectedUser
-                                                        .store
-                                                        .name
-                                                }
-                                            </h4>
-                                        </div>
-
-                                        <div className="owner-rating">
+                                        <span className="store-rating">
                                             ★{" "}
                                             {
                                                 selectedUser
                                                     .store
                                                     .overallRating
                                             }
-                                        </div>
+                                        </span>
 
                                     </div>
 
 
-                                    <div className="owner-store-details">
+                                    <div className="store-detail-grid">
 
                                         <div>
+
                                             <span>
-                                                Store email
+                                                STORE NAME
+                                            </span>
+
+                                            <strong>
+                                                {
+                                                    selectedUser
+                                                        .store
+                                                        .name
+                                                }
+                                            </strong>
+
+                                        </div>
+
+
+                                        <div>
+
+                                            <span>
+                                                STORE EMAIL
                                             </span>
 
                                             <strong>
@@ -557,12 +1245,14 @@ function UserList() {
                                                         .email
                                                 }
                                             </strong>
+
                                         </div>
 
 
-                                        <div>
+                                        <div className="store-address-detail">
+
                                             <span>
-                                                Store address
+                                                STORE ADDRESS
                                             </span>
 
                                             <strong>
@@ -572,20 +1262,22 @@ function UserList() {
                                                         .address
                                                 }
                                             </strong>
+
                                         </div>
 
                                     </div>
 
                                 </div>
-
                             )}
 
 
                         <button
                             type="button"
-                            className="modal-done-button"
+                            className="modal-close-button"
                             onClick={() =>
-                                setSelectedUser(null)
+                                setSelectedUser(
+                                    null
+                                )
                             }
                         >
                             Close details
@@ -594,7 +1286,6 @@ function UserList() {
                     </div>
 
                 </div>
-
             )}
 
         </section>
