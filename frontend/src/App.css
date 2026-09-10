@@ -2833,12 +2833,40 @@
 
 @media (max-width: 850px) {
 
+    html,
+    body,
+    #root {
+        width: 100%;
+        min-width: 320px;
+        min-height: 100%;
+
+        background: #080c10;
+    }
+
     .auth-page {
+        width: 100%;
+        min-height: 100dvh;
+
         overflow-y: auto;
+        overflow-x: hidden;
+
+        background:
+            radial-gradient(
+                circle at 15% 25%,
+                rgba(85, 214, 178, 0.09),
+                transparent 32%
+            ),
+            radial-gradient(
+                circle at 85% 75%,
+                rgba(170, 95, 255, 0.07),
+                transparent 30%
+            ),
+            #080c10;
     }
 
     .auth-layout {
-        min-height: 100vh;
+        width: 100%;
+        min-height: 100dvh;
 
         grid-template-columns: 1fr;
 
@@ -2848,6 +2876,8 @@
             45px
             24px
             55px;
+
+        box-sizing: border-box;
     }
 
     .auth-intro {
@@ -2888,6 +2918,8 @@
     }
 
     .auth-panel {
+        width: min(500px, 100%);
+
         max-width: 500px;
 
         justify-self: center;
@@ -7710,3 +7742,103 @@ body,
     }
 }
 
+/* =========================================================
+   RETAILIQ — MOBILE BACKGROUND SAFETY
+   Prevent white gaps/background leaks
+========================================================= */
+
+html,
+body,
+#root {
+    width: 100%;
+    min-width: 320px;
+    min-height: 100%;
+
+    margin: 0;
+    padding: 0;
+
+    background: #080c10 !important;
+
+    color: #edf2f5;
+}
+
+body {
+    overflow-x: hidden;
+}
+
+#root {
+    min-height: 100vh;
+    min-height: 100dvh;
+}
+
+
+/* ---------------------------------------------------------
+   ALL MAIN APPLICATION SHELLS
+--------------------------------------------------------- */
+
+.admin-app,
+.owner-app,
+.user-app,
+.auth-page {
+    width: 100%;
+    min-width: 0;
+    min-height: 100vh;
+    min-height: 100dvh;
+
+    box-sizing: border-box;
+
+    background-color: #080c10 !important;
+}
+
+
+/* ---------------------------------------------------------
+   MOBILE
+--------------------------------------------------------- */
+
+@media (max-width: 850px) {
+
+    html,
+    body,
+    #root {
+        width: 100%;
+        min-width: 0;
+        min-height: 100dvh;
+
+        background: #080c10 !important;
+    }
+
+    .admin-app,
+    .owner-app,
+    .user-app,
+    .auth-page {
+        width: 100%;
+        min-width: 0;
+        min-height: 100dvh;
+
+        margin: 0;
+        padding: 0;
+
+        background-color: #080c10 !important;
+    }
+}
+
+
+/* ---------------------------------------------------------
+   SMALL MOBILE
+--------------------------------------------------------- */
+
+@media (max-width: 520px) {
+
+    html,
+    body,
+    #root {
+        background: #080c10 !important;
+    }
+
+    .admin-app,
+    .owner-app,
+    .user-app,
+    .auth-page {
+        background-color: #080c10 !important;
+    }
+}
