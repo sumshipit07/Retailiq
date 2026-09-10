@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../AdminDashboard.css";
+import "./AdminDashboardMobile.css";
 import axios from "axios";
 
 import UserList from "../components/Admin/UserList";
@@ -8,16 +9,157 @@ import AddUser from "../components/Admin/AddUser";
 import StoreList from "../components/Admin/StoreList";
 import AddStore from "../components/Admin/AddStore";
 
+
+/* =========================================================
+   ICON SYSTEM
+========================================================= */
+
+function Icon({ name, size = 20 }) {
+    const common = {
+        width: size,
+        height: size,
+        viewBox: "0 0 24 24",
+        fill: "none",
+        stroke: "currentColor",
+        strokeWidth: 1.8,
+        strokeLinecap: "round",
+        strokeLinejoin: "round",
+        "aria-hidden": true,
+    };
+
+    switch (name) {
+        case "workspace":
+            return (
+                <svg {...common}>
+                    <rect x="3" y="4" width="18" height="16" rx="2" />
+                    <path d="M3 9h18" />
+                    <path d="M8 4v5" />
+                </svg>
+            );
+
+        case "users":
+            return (
+                <svg {...common}>
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2" />
+                    <circle cx="9.5" cy="7" r="3.5" />
+                    <path d="M17 3.5a3.5 3.5 0 0 1 0 7" />
+                    <path d="M21 21v-2a4 4 0 0 0-3-3.87" />
+                </svg>
+            );
+
+        case "stores":
+            return (
+                <svg {...common}>
+                    <path d="M4 10h16" />
+                    <path d="M5 10v10h14V10" />
+                    <path d="M3 10l2-6h14l2 6" />
+                    <path d="M8 20v-5h8v5" />
+                </svg>
+            );
+
+        case "settings":
+            return (
+                <svg {...common}>
+                    <circle cx="12" cy="12" r="3" />
+                    <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-1.8 1.8-.06-.06a1.7 1.7 0 0 0-1.88-.34 1.7 1.7 0 0 0-1.03 1.56V22h-2.55v-.1a1.7 1.7 0 0 0-1.03-1.56 1.7 1.7 0 0 0-1.88.34l-.06.06-1.8-1.8.06-.06A1.7 1.7 0 0 0 8.1 17a1.7 1.7 0 0 0-1.56-1.03H6.4v-2.55h.14A1.7 1.7 0 0 0 8.1 12.4a1.7 1.7 0 0 0-.34-1.88l-.06-.06 1.8-1.8.06.06a1.7 1.7 0 0 0 1.88.34 1.7 1.7 0 0 0 1.03-1.56V6h2.55v.1a1.7 1.7 0 0 0 1.03 1.56 1.7 1.7 0 0 0 1.88-.34l.06-.06 1.8 1.8-.06.06a1.7 1.7 0 0 0-.34 1.88 1.7 1.7 0 0 0 1.56 1.03H22v2.55h-.1A1.7 1.7 0 0 0 19.4 15Z" />
+                </svg>
+            );
+
+        case "logout":
+            return (
+                <svg {...common}>
+                    <path d="M10 17l5-5-5-5" />
+                    <path d="M15 12H3" />
+                    <path d="M21 19V5a2 2 0 0 0-2-2h-5" />
+                </svg>
+            );
+
+        case "plus":
+            return (
+                <svg {...common}>
+                    <path d="M12 5v14" />
+                    <path d="M5 12h14" />
+                </svg>
+            );
+
+        case "user-plus":
+            return (
+                <svg {...common}>
+                    <path d="M15 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                    <circle cx="8.5" cy="7" r="3.5" />
+                    <path d="M19 8v6" />
+                    <path d="M16 11h6" />
+                </svg>
+            );
+
+        case "store-plus":
+            return (
+                <svg {...common}>
+                    <path d="M4 10h16" />
+                    <path d="M5 10v10h14V10" />
+                    <path d="M3 10l2-6h14l2 6" />
+                    <path d="M12 13v5" />
+                    <path d="M9.5 15.5h5" />
+                </svg>
+            );
+
+        case "users-stat":
+            return (
+                <svg {...common}>
+                    <circle cx="9" cy="8" r="3" />
+                    <path d="M3 20v-1a6 6 0 0 1 12 0v1" />
+                    <path d="M16 5.5a3 3 0 0 1 0 5.5" />
+                    <path d="M18 15a5 5 0 0 1 3 4.5V20" />
+                </svg>
+            );
+
+        case "store-stat":
+            return (
+                <svg {...common}>
+                    <path d="M4 10h16" />
+                    <path d="M5 10v10h14V10" />
+                    <path d="M3 10l2-6h14l2 6" />
+                    <path d="M9 20v-6h6v6" />
+                </svg>
+            );
+
+        case "rating":
+            return (
+                <svg {...common}>
+                    <path d="M12 3l2.8 5.7 6.2.9-4.5 4.4 1.1 6.2L12 17.3 6.4 20.2l1.1-6.2L3 9.6l6.2-.9L12 3Z" />
+                </svg>
+            );
+
+        case "arrow":
+            return (
+                <svg {...common}>
+                    <path d="M5 12h13" />
+                    <path d="M13 6l6 6-6 6" />
+                </svg>
+            );
+
+        default:
+            return null;
+    }
+}
+
+
 function AdminDashboard() {
     const navigate = useNavigate();
 
     const [activeSection, setActiveSection] = useState("workspace");
+    const [fabOpen, setFabOpen] = useState(false);
 
     const [stats, setStats] = useState({
         totalUsers: 0,
         totalStores: 0,
         totalRatings: 0,
     });
+
+
+    /* =========================================================
+       LOAD DASHBOARD
+    ========================================================= */
 
     useEffect(() => {
         const token = localStorage.getItem("token");
@@ -48,6 +190,11 @@ function AdminDashboard() {
             });
     }, []);
 
+
+    /* =========================================================
+       LOGOUT
+    ========================================================= */
+
     const handleLogout = () => {
         localStorage.removeItem("token");
         localStorage.removeItem("user");
@@ -55,22 +202,46 @@ function AdminDashboard() {
         navigate("/login");
     };
 
+
+    /* =========================================================
+       NAVIGATION
+    ========================================================= */
+
     const handleNavigation = (section) => {
         setActiveSection(section);
+        setFabOpen(false);
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth",
+        });
     };
+
+
+    const handleRatingSection = () => {
+        setActiveSection("workspace");
+        setFabOpen(false);
+
+        setTimeout(() => {
+            document
+                .querySelector(".admin-stats")
+                ?.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start",
+                });
+        }, 50);
+    };
+
 
     return (
         <div className="admin-app">
 
             {/* =================================================
-                SIDEBAR
+                DESKTOP SIDEBAR
             ================================================= */}
 
             <aside className="admin-sidebar">
 
                 <div className="admin-sidebar-top">
-
-                    {/* BRAND */}
 
                     <div className="admin-brand">
 
@@ -91,26 +262,21 @@ function AdminDashboard() {
                     </div>
 
 
-                    {/* NAVIGATION */}
-
                     <nav className="admin-nav">
 
-                        <p className="admin-nav-label">
+                        <div className="admin-nav-label">
                             PLATFORM
-                        </p>
+                        </div>
 
                         <button
                             type="button"
                             className={`admin-nav-item ${
-                                activeSection ===
-                                "workspace"
+                                activeSection === "workspace"
                                     ? "active"
                                     : ""
                             }`}
                             onClick={() =>
-                                handleNavigation(
-                                    "workspace"
-                                )
+                                handleNavigation("workspace")
                             }
                         >
                             <span className="nav-icon">
@@ -123,26 +289,24 @@ function AdminDashboard() {
                         </button>
 
 
-                        <p className="admin-nav-label">
+                        <div className="admin-nav-label">
                             MANAGEMENT
-                        </p>
+                        </div>
+
 
                         <button
                             type="button"
                             className={`admin-nav-item ${
-                                activeSection ===
-                                "users"
+                                activeSection === "users"
                                     ? "active"
                                     : ""
                             }`}
                             onClick={() =>
-                                handleNavigation(
-                                    "users"
-                                )
+                                handleNavigation("users")
                             }
                         >
                             <span className="nav-icon">
-                                ◉
+                                +
                             </span>
 
                             <span>
@@ -154,15 +318,12 @@ function AdminDashboard() {
                         <button
                             type="button"
                             className={`admin-nav-item ${
-                                activeSection ===
-                                "add-user"
+                                activeSection === "add-user"
                                     ? "active"
                                     : ""
                             }`}
                             onClick={() =>
-                                handleNavigation(
-                                    "add-user"
-                                )
+                                handleNavigation("add-user")
                             }
                         >
                             <span className="nav-icon">
@@ -178,19 +339,16 @@ function AdminDashboard() {
                         <button
                             type="button"
                             className={`admin-nav-item ${
-                                activeSection ===
-                                "stores"
+                                activeSection === "stores"
                                     ? "active"
                                     : ""
                             }`}
                             onClick={() =>
-                                handleNavigation(
-                                    "stores"
-                                )
+                                handleNavigation("stores")
                             }
                         >
                             <span className="nav-icon">
-                                ▣
+                                ◫
                             </span>
 
                             <span>
@@ -202,15 +360,12 @@ function AdminDashboard() {
                         <button
                             type="button"
                             className={`admin-nav-item ${
-                                activeSection ===
-                                "add-store"
+                                activeSection === "add-store"
                                     ? "active"
                                     : ""
                             }`}
                             onClick={() =>
-                                handleNavigation(
-                                    "add-store"
-                                )
+                                handleNavigation("add-store")
                             }
                         >
                             <span className="nav-icon">
@@ -226,8 +381,6 @@ function AdminDashboard() {
 
                 </div>
 
-
-                {/* SIDEBAR BOTTOM */}
 
                 <div className="admin-sidebar-bottom">
 
@@ -253,13 +406,7 @@ function AdminDashboard() {
                         className="admin-logout"
                         onClick={handleLogout}
                     >
-                        <span>
-                            Logout
-                        </span>
-
-                        <span>
-                            ↗
-                        </span>
+                        Logout
                     </button>
 
                 </div>
@@ -273,11 +420,13 @@ function AdminDashboard() {
 
             <main className="admin-main">
 
-                {/* TOP BAR */}
+                {/* =================================================
+                    TOP BAR
+                ================================================= */}
 
                 <header className="admin-topbar">
 
-                    <div>
+                    <div className="admin-topbar-copy">
 
                         <span className="admin-topbar-label">
                             SYSTEM ADMINISTRATION
@@ -287,15 +436,14 @@ function AdminDashboard() {
                             Platform Workspace
                         </h1>
 
+                        <span className="admin-mobile-role">
+                            System Administrator
+                        </span>
+
                     </div>
 
-                    <div
-                        style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "16px",
-                        }}
-                    >
+
+                    <div className="admin-topbar-actions">
 
                         <span className="admin-topbar-role">
                             SYSTEM ADMIN
@@ -303,20 +451,15 @@ function AdminDashboard() {
 
                         <button
                             type="button"
+                            className="admin-mobile-logout"
                             onClick={handleLogout}
-                            style={{
-                                padding: "10px 18px",
-                                borderRadius: "999px",
-                                border: "1px solid rgba(190, 112, 255, 0.5)",
-                                background: "transparent",
-                                color: "inherit",
-                                fontSize: "11px",
-                                fontWeight: "600",
-                                letterSpacing: "0.08em",
-                                cursor: "pointer",
-                            }}
+                            aria-label="Logout"
+                            title="Logout"
                         >
-                            LOGOUT ↗
+                            <Icon
+                                name="logout"
+                                size={20}
+                            />
                         </button>
 
                     </div>
@@ -351,11 +494,20 @@ function AdminDashboard() {
                         </div>
 
 
-                        {/* STATISTICS */}
+                        {/* =================================================
+                            STATISTICS
+                        ================================================= */}
 
                         <div className="admin-stats">
 
-                            <div className="admin-stat-card">
+                            <div className="admin-stat-card admin-stat-users">
+
+                                <div className="mobile-stat-icon">
+                                    <Icon
+                                        name="users-stat"
+                                        size={20}
+                                    />
+                                </div>
 
                                 <span>
                                     01 · PLATFORM
@@ -372,7 +524,14 @@ function AdminDashboard() {
                             </div>
 
 
-                            <div className="admin-stat-card">
+                            <div className="admin-stat-card admin-stat-stores">
+
+                                <div className="mobile-stat-icon">
+                                    <Icon
+                                        name="store-stat"
+                                        size={20}
+                                    />
+                                </div>
 
                                 <span>
                                     02 · NETWORK
@@ -389,7 +548,14 @@ function AdminDashboard() {
                             </div>
 
 
-                            <div className="admin-stat-card">
+                            <div className="admin-stat-card admin-stat-ratings">
+
+                                <div className="mobile-stat-icon">
+                                    <Icon
+                                        name="rating"
+                                        size={20}
+                                    />
+                                </div>
 
                                 <span>
                                     03 · FEEDBACK
@@ -408,14 +574,29 @@ function AdminDashboard() {
                         </div>
 
 
-                        {/* PLATFORM DETAILS */}
+                        {/* =================================================
+                            PLATFORM DETAILS
+                        ================================================= */}
 
                         <div className="workspace-details">
 
-                            <div className="workspace-detail-card">
+                            <button
+                                type="button"
+                                className="workspace-detail-card"
+                                onClick={() =>
+                                    handleNavigation("users")
+                                }
+                            >
 
                                 <span className="detail-number">
                                     01
+                                </span>
+
+                                <span className="mobile-feature-icon">
+                                    <Icon
+                                        name="users"
+                                        size={19}
+                                    />
                                 </span>
 
                                 <div>
@@ -431,13 +612,33 @@ function AdminDashboard() {
                                     </p>
                                 </div>
 
-                            </div>
+                                <span className="mobile-feature-arrow">
+                                    <Icon
+                                        name="arrow"
+                                        size={18}
+                                    />
+                                </span>
+
+                            </button>
 
 
-                            <div className="workspace-detail-card">
+                            <button
+                                type="button"
+                                className="workspace-detail-card"
+                                onClick={() =>
+                                    handleNavigation("stores")
+                                }
+                            >
 
                                 <span className="detail-number">
                                     02
+                                </span>
+
+                                <span className="mobile-feature-icon">
+                                    <Icon
+                                        name="stores"
+                                        size={19}
+                                    />
                                 </span>
 
                                 <div>
@@ -453,13 +654,31 @@ function AdminDashboard() {
                                     </p>
                                 </div>
 
-                            </div>
+                                <span className="mobile-feature-arrow">
+                                    <Icon
+                                        name="arrow"
+                                        size={18}
+                                    />
+                                </span>
+
+                            </button>
 
 
-                            <div className="workspace-detail-card">
+                            <button
+                                type="button"
+                                className="workspace-detail-card"
+                                onClick={handleRatingSection}
+                            >
 
                                 <span className="detail-number">
                                     03
+                                </span>
+
+                                <span className="mobile-feature-icon">
+                                    <Icon
+                                        name="rating"
+                                        size={19}
+                                    />
                                 </span>
 
                                 <div>
@@ -474,7 +693,14 @@ function AdminDashboard() {
                                     </p>
                                 </div>
 
-                            </div>
+                                <span className="mobile-feature-arrow">
+                                    <Icon
+                                        name="arrow"
+                                        size={18}
+                                    />
+                                </span>
+
+                            </button>
 
                         </div>
 
@@ -590,7 +816,236 @@ function AdminDashboard() {
 
                 )}
 
+
+                {/* =================================================
+                    MOBILE SETTINGS
+                ================================================= */}
+
+                {activeSection === "settings" && (
+
+                    <section className="admin-mobile-settings">
+
+                        <span className="admin-eyebrow">
+                            ACCOUNT
+                        </span>
+
+                        <h2>
+                            Settings
+                        </h2>
+
+                        <div className="mobile-settings-card">
+
+                            <div className="mobile-settings-icon">
+                                <Icon
+                                    name="settings"
+                                    size={22}
+                                />
+                            </div>
+
+                            <div>
+                                <strong>
+                                    System Administrator
+                                </strong>
+
+                                <span>
+                                    RetailIQ administration account
+                                </span>
+                            </div>
+
+                        </div>
+
+
+                        <button
+                            type="button"
+                            className="mobile-settings-logout"
+                            onClick={handleLogout}
+                        >
+                            <Icon
+                                name="logout"
+                                size={19}
+                            />
+
+                            <span>
+                                Logout
+                            </span>
+                        </button>
+
+                    </section>
+
+                )}
+
             </main>
+
+
+            {/* =================================================
+                MOBILE FAB
+            ================================================= */}
+
+            <div
+                className={`admin-mobile-fab-wrap ${
+                    fabOpen ? "open" : ""
+                }`}
+            >
+
+                {fabOpen && (
+
+                    <div className="admin-mobile-fab-menu">
+
+                        <button
+                            type="button"
+                            onClick={() =>
+                                handleNavigation("add-user")
+                            }
+                        >
+                            <span>
+                                <Icon
+                                    name="user-plus"
+                                    size={18}
+                                />
+                            </span>
+
+                            Add User
+                        </button>
+
+
+                        <button
+                            type="button"
+                            onClick={() =>
+                                handleNavigation("add-store")
+                            }
+                        >
+                            <span>
+                                <Icon
+                                    name="store-plus"
+                                    size={18}
+                                />
+                            </span>
+
+                            Add Store
+                        </button>
+
+                    </div>
+
+                )}
+
+
+                <button
+                    type="button"
+                    className="admin-mobile-fab"
+                    onClick={() =>
+                        setFabOpen((previous) => !previous)
+                    }
+                    aria-label={
+                        fabOpen
+                            ? "Close actions"
+                            : "Add"
+                    }
+                >
+                    <Icon
+                        name="plus"
+                        size={23}
+                    />
+                </button>
+
+            </div>
+
+
+            {/* =================================================
+                MOBILE BOTTOM NAVIGATION
+            ================================================= */}
+
+            <nav className="admin-mobile-bottom-nav">
+
+                <button
+                    type="button"
+                    className={
+                        activeSection === "workspace"
+                            ? "active"
+                            : ""
+                    }
+                    onClick={() =>
+                        handleNavigation("workspace")
+                    }
+                >
+                    <Icon
+                        name="workspace"
+                        size={20}
+                    />
+
+                    <span>
+                        Workspace
+                    </span>
+                </button>
+
+
+                <button
+                    type="button"
+                    className={
+                        activeSection === "users" ||
+                        activeSection === "add-user"
+                            ? "active"
+                            : ""
+                    }
+                    onClick={() =>
+                        handleNavigation("users")
+                    }
+                >
+                    <Icon
+                        name="users"
+                        size={20}
+                    />
+
+                    <span>
+                        Users
+                    </span>
+                </button>
+
+
+                <button
+                    type="button"
+                    className={
+                        activeSection === "stores" ||
+                        activeSection === "add-store"
+                            ? "active"
+                            : ""
+                    }
+                    onClick={() =>
+                        handleNavigation("stores")
+                    }
+                >
+                    <Icon
+                        name="stores"
+                        size={20}
+                    />
+
+                    <span>
+                        Stores
+                    </span>
+                </button>
+
+
+                <button
+                    type="button"
+                    className={
+                        activeSection === "settings"
+                            ? "active"
+                            : ""
+                    }
+                    onClick={() =>
+                        handleNavigation("settings")
+                    }
+                >
+                    <Icon
+                        name="settings"
+                        size={20}
+                    />
+
+                    <span>
+                        Settings
+                    </span>
+                </button>
+
+            </nav>
 
         </div>
     );
