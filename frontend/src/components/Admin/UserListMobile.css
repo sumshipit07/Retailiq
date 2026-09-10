@@ -45,20 +45,15 @@
        HIDE OLD DESKTOP/MOBILE TABLE UI
     ----------------------------------------------------- */
 
-    .users-management
-        > .management-header,
+    .users-management>.management-header,
 
-    .users-management
-        > .user-controls,
+    .users-management>.user-controls,
 
-    .users-management
-        > .users-table-card,
+    .users-management>.users-table-card,
 
-    .users-management
-        > .professional-users-table,
+    .users-management>.professional-users-table,
 
-    .users-management
-        > .users-table-container {
+    .users-management>.users-table-container {
         display: none !important;
     }
 
@@ -76,8 +71,7 @@
 
         box-sizing: border-box;
 
-        border-bottom: 1px solid
-            rgba(255, 255, 255, 0.09);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.09);
     }
 
     .users-mobile-eyebrow {
@@ -134,8 +128,7 @@
 
         box-sizing: border-box;
 
-        border: 1px solid
-            rgba(168, 85, 247, 0.42);
+        border: 1px solid rgba(168, 85, 247, 0.42);
 
         border-radius: 999px;
 
@@ -159,8 +152,7 @@
         display: grid;
 
         grid-template-columns:
-            minmax(0, 1fr)
-            auto;
+            minmax(0, 1fr) auto;
 
         gap: 8px;
 
@@ -178,14 +170,11 @@
         display: grid;
 
         grid-template-columns:
-            22px
-            minmax(0, 1fr)
-            44px;
+            22px minmax(0, 1fr) 44px;
 
         align-items: center;
 
-        border: 1px solid
-            rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.15);
 
         border-radius: 10px;
 
@@ -194,7 +183,7 @@
         overflow: hidden;
     }
 
-    .users-mobile-search-box > svg {
+    .users-mobile-search-box>svg {
         margin-left: 13px;
 
         color: #aeb9c4;
@@ -226,7 +215,7 @@
         outline: none;
     }
 
-    .users-mobile-search-box > button {
+    .users-mobile-search-box>button {
         width: 44px;
         height: 44px;
 
@@ -260,8 +249,7 @@
 
         gap: 6px;
 
-        border: 1px solid
-            rgba(168, 85, 247, 0.30);
+        border: 1px solid rgba(168, 85, 247, 0.30);
 
         border-radius: 10px;
 
@@ -338,8 +326,7 @@
 
         gap: 6px;
 
-        border: 1px solid
-            rgba(168, 85, 247, 0.28);
+        border: 1px solid rgba(168, 85, 247, 0.28);
 
         border-radius: 999px;
 
@@ -360,6 +347,8 @@
     ----------------------------------------------------- */
 
     .users-mobile-filter-panel {
+        display: block;
+
         width: 100%;
 
         margin: 2px 0 13px;
@@ -368,21 +357,17 @@
 
         box-sizing: border-box;
 
-        border: 1px solid
-            rgba(255, 255, 255, 0.13);
+        border: 1px solid rgba(255, 255, 255, 0.13);
 
         border-radius: 13px;
 
         background:
-            linear-gradient(
-                145deg,
+            linear-gradient(145deg,
                 #121920,
-                #0b1116
-            );
+                #0b1116);
 
         box-shadow:
-            0 18px 50px
-            rgba(0, 0, 0, 0.30);
+            0 18px 50px rgba(0, 0, 0, 0.30);
     }
 
     .users-filter-panel-header {
@@ -392,8 +377,7 @@
 
         padding-bottom: 13px;
 
-        border-bottom: 1px solid
-            rgba(255, 255, 255, 0.09);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.09);
     }
 
     .users-filter-panel-header span {
@@ -421,8 +405,7 @@
         display: grid;
         place-items: center;
 
-        border: 1px solid
-            rgba(255, 255, 255, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.12);
 
         border-radius: 9px;
 
@@ -474,8 +457,7 @@
 
         box-sizing: border-box;
 
-        border: 1px solid
-            rgba(255, 255, 255, 0.17);
+        border: 1px solid rgba(255, 255, 255, 0.17);
 
         border-radius: 9px;
 
@@ -499,8 +481,7 @@
             rgba(168, 85, 247, 0.60);
 
         box-shadow:
-            0 0 0 3px
-            rgba(168, 85, 247, 0.08);
+            0 0 0 3px rgba(168, 85, 247, 0.08);
     }
 
 
@@ -519,8 +500,7 @@
         justify-content: space-between;
 
         border: 0;
-        border-top: 1px solid
-            rgba(255, 255, 255, 0.08);
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
 
         background: transparent;
 
@@ -545,8 +525,7 @@
         display: grid;
 
         grid-template-columns:
-            minmax(0, 1fr)
-            minmax(0, 1fr);
+            minmax(0, 1fr) minmax(0, 1fr);
 
         gap: 9px;
 
@@ -576,8 +555,7 @@
 
         gap: 8px;
 
-        border: 1px solid
-            rgba(168, 85, 247, 0.65);
+        border: 1px solid rgba(168, 85, 247, 0.65);
 
         border-radius: 10px;
 
@@ -625,11 +603,10 @@
         align-items: center;
         justify-content: space-between;
 
-        border-top: 1px solid
-            rgba(255, 255, 255, 0.09);
+        border-top: 1px solid rgba(255, 255, 255, 0.09);
     }
 
-    .users-directory-summary > div {
+    .users-directory-summary>div {
         min-width: 0;
 
         display: flex;
@@ -654,15 +631,14 @@
         font-weight: 600;
     }
 
-    .users-directory-summary > button {
+    .users-directory-summary>button {
         width: 44px;
         height: 44px;
 
         display: grid;
         place-items: center;
 
-        border: 1px solid
-            rgba(255, 255, 255, 0.11);
+        border: 1px solid rgba(255, 255, 255, 0.11);
 
         border-radius: 9px;
 
@@ -699,8 +675,7 @@
         display: grid;
 
         grid-template-columns:
-            44px
-            minmax(0, 1fr);
+            44px minmax(0, 1fr);
 
         align-items: center;
 
@@ -709,8 +684,7 @@
         box-sizing: border-box;
 
         border: 0;
-        border-bottom: 1px solid
-            rgba(255, 255, 255, 0.075);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.075);
 
         background:
             rgba(15, 21, 27, 0.82);
@@ -726,8 +700,7 @@
     }
 
     .user-mobile-card:first-child {
-        border-top: 1px solid
-            rgba(255, 255, 255, 0.075);
+        border-top: 1px solid rgba(255, 255, 255, 0.075);
 
         border-radius: 11px 11px 0 0;
     }
@@ -805,7 +778,7 @@
         gap: 4px;
     }
 
-    .user-mobile-card-content > strong {
+    .user-mobile-card-content>strong {
         min-width: 0;
 
         overflow: hidden;
@@ -943,8 +916,7 @@
 
         margin-bottom: 14px;
 
-        border: 1px solid
-            rgba(168, 85, 247, 0.25);
+        border: 1px solid rgba(168, 85, 247, 0.25);
 
         border-radius: 50%;
 
@@ -975,8 +947,7 @@
 
         padding: 0 17px;
 
-        border: 1px solid
-            rgba(168, 85, 247, 0.40);
+        border: 1px solid rgba(168, 85, 247, 0.40);
 
         border-radius: 9px;
 
@@ -1005,18 +976,15 @@
         inset: 0;
 
         background:
-            linear-gradient(
-                90deg,
+            linear-gradient(90deg,
                 transparent 0%,
                 rgba(255, 255, 255, 0.045) 50%,
-                transparent 100%
-            );
+                transparent 100%);
 
         transform: translateX(-100%);
 
         animation:
-            userSkeletonShimmer
-            1.4s infinite;
+            userSkeletonShimmer 1.4s infinite;
     }
 
     .skeleton-avatar {
@@ -1159,9 +1127,7 @@
 
     .users-mobile-search-box {
         grid-template-columns:
-            22px
-            minmax(0, 1fr)
-            44px;
+            22px minmax(0, 1fr) 44px;
     }
 
     .users-filter-sort {
